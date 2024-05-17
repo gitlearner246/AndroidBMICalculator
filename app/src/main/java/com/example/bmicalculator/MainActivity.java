@@ -49,19 +49,29 @@ public class MainActivity extends AppCompatActivity {
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calculateBmi();
+                double bmiResult = calculateBmi();
+
+                String ageText = ageEditText.getText().toString();
+                int age = Integer.parseInt(ageText);
+
+                if (age >= 18) {
+                    displayResult(bmiResult);
+                } else {
+                    displayGuidance(bmiResult); {
+                    }
+                }
+
             }
         });
     }
 
-    private void calculateBmi() {
-        String ageText = ageEditText.getText().toString();
+
+    private double calculateBmi() {
         String feetText = feetEditText.getText().toString();
         String inchesText = inchesEditText.getText().toString();
         String weightText = weightEditText.getText().toString();
 
         //  converting the number 'StringS' into 'int' variables
-        int age = Integer.parseInt(ageText);
         int feet = Integer.parseInt(feetText);
         int inches = Integer.parseInt(inchesText);
         int weight = Integer.parseInt(weightText);
@@ -70,8 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
         double heightInMeters = totalInches * 0.0254;
 
-        double bmi = weight / (heightInMeters * heightInMeters);
+        return weight / (heightInMeters * heightInMeters);
+    }
 
+    private void displayResult(double bmi) {
         // convert the decimal/double into string
         DecimalFormat myDecimalFormatter = new DecimalFormat("0.00");
         String bmiTextResult = myDecimalFormatter.format(bmi);
@@ -86,6 +98,21 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // display healthy
             fullResultString = bmiTextResult + " - You are a healthy weight!";
+        }
+        resultText.setText(fullResultString);
+    }
+
+    private void displayGuidance(double bmi) {
+        DecimalFormat myDecimalFormatter = new DecimalFormat("0.00");
+        String bmiTextResult = myDecimalFormatter.format(bmi);
+
+        String fullResultString;
+        if (maleButton.isChecked()) {
+            fullResultString = bmiTextResult + " - As you are under 18, please consult with your doctor for the healthy range for boys";
+        } else if (femaleButton.isChecked()) {
+            fullResultString = bmiTextResult + " - As you are under 18, please consult with your doctor for the healthy range for girls";
+        } else {
+            fullResultString = bmiTextResult + " - As you are under 18, please consult with your doctor for the healthy range";
         }
         resultText.setText(fullResultString);
     }
